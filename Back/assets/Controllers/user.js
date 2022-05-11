@@ -19,7 +19,7 @@ exports.login = async (req,res) =>{
 			else{
 				res.status(200).json({
 					token:jwt.sign(
-						{test:'test'},
+						{userId:'userId'},
 						process.env.TOKEN_CRYPTER,
 						{expiresIn:'24h'}
 					)
