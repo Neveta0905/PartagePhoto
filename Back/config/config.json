@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "root",
+    "password": "1234",
+    "database": "partage_photo",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
