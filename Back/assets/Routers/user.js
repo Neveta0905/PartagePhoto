@@ -1,11 +1,15 @@
 const express = require('express')
 const router = express.Router();
 const controller = require('../Controllers/user')
+const auth = require('../Utils/auth')
 const apiPath = '/auth/'
 	
 	// Actions
 	router.route(apiPath)
-		.get((req,res)=>res.send('je suis un user'))
+		.get(auth.all,controller.getOne)
+
+	router.route(apiPath+'subscribed')
+		.get(auth.all,controller.getEventsSubscribed)
 
 	router.route(apiPath+'login')
 		.post(controller.login)

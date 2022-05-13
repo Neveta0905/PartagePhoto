@@ -2,32 +2,46 @@ const models = require('../Models')
 const bcrypt = require('bcrypt')
 const Regex_rules = require('../Utils/regex')
 const jwt = require('jsonwebtoken')
+const auth = require('../Utils/auth')
 
-exports.login = async (req,res) =>{
+exports.getOne = (req,res) =>{
+	models.Users.findOne({
+		where:{userid:req.params.id}
+	})
+	.then(result => res.status(200).json({message:result}))
+	.catch(error => res.status(400).json({error:error}))
+}
+
+exports.login = (req,res) =>{
 	const mail = req.body.mail
 	const password = req.body.password
-	const user = await models.User.findOne({
+
+	models.User.findOne({
 		where:{mail:mail}
 	})
-	if(!user)
-		res.status(400).json({error:'Wrong mail or password'})
-	else{
-		bcrypt.compare(password,user.password)
-		.then(valid=>{
-			if(!valid)
-				res.status(400).json({error:'Wrong mail or password'})
-			else{
-				res.status(200).json({
-					token:jwt.sign(
-						{userId:'userId'},
-						process.env.TOKEN_CRYPTER,
-						{expiresIn:'24h'}
-					)
-				})
-			}
-		})
-		.catch(error=>{res.send({error:error})})
-	}
+	.then(user =>{
+		if(!user)
+			res.status(400).json({error:'Wrong mail or password'})
+		else{
+			bcrypt.compare(password,user.password)
+			.then(valid=>{
+				if(!valid)
+					res.status(400).json({error:'Wrong mail or password'})
+				else{
+					res.status(200).json({
+						token:jwt.sign(
+							{userId:user.iduser},
+							process.env.TOKEN_CRYPTER,
+							{expiresIn:'24h'}
+						)
+					})
+				}
+			})
+			.catch(error=>{res.status(400).json({error:'Wrong mail or password'})})
+		}
+	})
+	.catch(error => {res.status(400).json({error:error})})
+
 }
 
 exports.signup = async (req,res) =>{
@@ -50,4 +64,14 @@ exports.signup = async (req,res) =>{
 		})
 		.catch(error=>res.status(400).json({error:error}))
 	} 
+}
+
+exports.getEventsSubscribed = (req,res) => {
+	const my_id = auth.GetMyId(req.headers.authorization)
+	models.Events_subscribers.findAll({
+		where:{users_id:my_id},
+		include:[{model:models.Event}]
+	})
+	.then(result => res.status(200).json({result:result}))
+	.catch(error=>res.status(400).json({error:error}))
 }

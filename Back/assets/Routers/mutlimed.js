@@ -8,7 +8,9 @@ router.route(apiPath)
 	.post((req,res)=>res.send('Multimédia reçu'))
 	.put((req,res)=>res.send('je modifie'))
 	.delete((req,res)=>res.send('Je supprime'))
-
+	
+router.route(apiPath+':id')
+	.get((req,res)=>res.send(`Je veux le multiméd ${req.params.id}`))
 
 
 const objExport = {
