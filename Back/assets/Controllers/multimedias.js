@@ -1,3 +1,5 @@
+const models = require('../Models')
+
 exports.getOne = (req,res) => {
 
 }

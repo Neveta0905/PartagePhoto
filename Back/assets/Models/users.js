@@ -18,11 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     biographie:{
       type:DataTypes.STRING,
+      defaultValue: 'My bio ...',
     },
     nickname:{
       type:DataTypes.STRING,
       unique: true,
       allowNull:false,
+      defaultValue: 'New User',
     },
     role:{
       type:DataTypes.BOOLEAN
@@ -30,7 +32,22 @@ module.exports = (sequelize, DataTypes) => {
   },{timestamps:false}
   )
   User.associate = (models) => {
+    models.User.hasMany(models.Multimedia,{
+      foreignKey:
+      {name:'creator'}
+    })
 
+    models.User.hasMany(models.Event,{
+      foreignKey:
+      {name:'creator'}
+    })
+
+    models.User.belongsToMany(models.Event,
+      {
+        through: models.Events_subscribers,
+        foreignKey:'users_id'
+      }
+    )
   }
   return User;
 }
