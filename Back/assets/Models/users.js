@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   },{timestamps:false}
   )
   User.associate = (models) => {
-    models.User.hasMany(models.Multimedia,{
+    models.User.hasMany(models.Multimedias,{
       foreignKey:
       {name:'creator'}
     })

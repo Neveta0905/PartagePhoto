@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) =>{
-	const Multimedia = sequelize.define('Multimedia',{
+	const Multimedia = sequelize.define('Multimedias',{
 		idMultimedia:{
 			name:'idMultimedia',
 		    type:DataTypes.INTEGER,
@@ -26,14 +26,14 @@ module.exports = (sequelize, DataTypes) =>{
 		{timestamps:false}
 	);
 	Multimedia.associate = (models) =>{
-		models.Multimedia.belongsTo(models.User,{
+		models.Multimedias.belongsTo(models.User,{
 			foreignKey:{
 				allowNull : false,
 				name : 'creator'
 			}
 		})
 
-		models.Multimedia.belongsTo(models.Event,{
+		models.Multimedias.belongsTo(models.Event,{
 			foreignKey:{
 				allowNull : false,
 				name : 'idevent'

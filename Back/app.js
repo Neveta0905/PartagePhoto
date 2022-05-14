@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')('dev') // See requests
 const dotenv = require('dotenv').config()
 const Sequelize = require('sequelize')
+const path = require('path');
 const helmet = require('helmet') // Protect against XSS
 app.use(helmet())
 
@@ -15,6 +16,7 @@ app.use(cors())
 // App
 app.use(express.json()) // Parsing in JSON
 app.use(morgan)
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 

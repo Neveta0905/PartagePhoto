@@ -44,12 +44,24 @@ exports.postOne = (req,res) => {
 }
 
 exports.modifyOne = (req,res) => {
-	models.Event.update({...req.body},{
+	const my_id = auth.GetMyId(req.headers.authorization)
+
+	models.Event.findOne({
 		where:{
-			idevent:req.params.id
+			idevent: req.params.id
 		}
 	})
-	.then(result => res.status(200).json({message:'Event modified'}))
+	.then(event =>{
+		event.creator != my_id ?
+		res.status(400).json({error:'You are not the owner of the event'})
+		: models.Event.update({...req.body},{
+			where:{
+				idevent:req.params.id
+			}
+		})
+		.then(result => res.status(200).json({message:'Event modified'}))
+		.catch(error => res.status(400).json({error:error}))
+	})
 	.catch(error => res.status(400).json({error:error}))
 }
 
