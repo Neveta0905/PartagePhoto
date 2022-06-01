@@ -3,10 +3,10 @@ const jwt = require('jsonwebtoken');
 exports.all = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_CRYPTER,err=>{throw err});
+    const decodedToken = jwt.verify(token, process.env.TOKEN_CRYPTER);
     const userId = decodedToken.userId.toString();
 
-    if (!req.body.userId || req.body.userId !== userId) {
+    if (req.body.userId && req.body.userId !== userId) {
       throw 'Invalid user ID';
     } else {
       next();
@@ -23,9 +23,8 @@ exports.admin = (req, res, next) => { // Faut envoyer authorization : token + ro
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_CRYPTER);
     const userId = decodedToken.userId.toString();
-    const userRole = decodedToken.userRole.toString();
-
-    if (!req.body.userId || req.body.userId !== userId) {
+    
+    if (req.body.userId && (req.body.userId !== userId)) {
       throw 'Invalid user ID';
     }
     else if (userRole != 2) {
@@ -46,3 +45,16 @@ exports.GetMyId = (key) => {
   const userId = decodedToken.userId;
   return userId
 }
+
+
+exports.files = (req, res, next) => { // error handdle differently
+  try{
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN_CRYPTER);
+    const userId = decodedToken.userId.toString();
+      
+    next()
+  } catch (error) {
+    res.status(403).json({error:error})
+  }
+};
