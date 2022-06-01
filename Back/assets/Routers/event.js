@@ -6,7 +6,7 @@ const auth = require('../Utils/auth')
 
 router.route(apiPath)
 	.get(auth.admin,controller.getAll)
-	.post(auth.all,controller.postOne)
+	.post(controller.postOne)
 	
 router.route(apiPath+':id')
 	.get(auth.admin,controller.getOne)
@@ -15,6 +15,10 @@ router.route(apiPath+':id')
 
 router.route(apiPath+':id/subscribers')
 	.get(auth.all,controller.getSubscribers)
+	.post(auth.all,controller.addSubscribers)
+
+router.route(apiPath+':id/multimedias')
+	.get(auth.all,controller.getMultimedias)
 
 
 const objExport = {
